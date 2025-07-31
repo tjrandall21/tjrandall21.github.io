@@ -57,7 +57,7 @@ class ShopEntry
         {
             displayString += (" ("+this.notes+')');
         }
-        //fill(230);
+        textSize(16)
         text(displayString, shopPosition.x+225,shopPosition.y+(y*shopEntryHeight));
     }
 }
@@ -75,6 +75,7 @@ function setup()
     shopEntryHeight = 25;
     titleText ="Super Secret Sploob Shop";
     createCanvas(windowWidth, windowHeight);
+    background(35);
     shopSize = 6;
     initShopEntries();
     randomizeAll();
@@ -102,11 +103,11 @@ function windowResized()
 function randomizeAll()
 {
     currentShop = [];
-    currentShop.push(new ShopEntry("Flash Sale","-25%","Discount on "+getRandomTypeCombo()+" Pokemon", "Bargain", "Always available but the type combo changes"));
+    currentShop.push(new ShopEntry("Flash Sale","-25%","-25% Discount on "+getRandomTypeCombo()+" Pokemon", "Bargain", "Always available but the type combo changes"));
     currentShop.push(new ShopEntry("Tradeless","","Gain 1 Point, but have 1 less maximum trades","Gain Points","Max 5 times per person"));
     currentShop.push(new ShopEntry("One Trick Pony","","Gain 1 Point, and choose a pokemon on your draft to be limited to only one ability slot","Gain Points","Max 5 times per person, trading away the affected pokemon loses the additional point"));
     currentShop.push(new ShopEntry("Gambling Sponsorship","","Gain 2 Points, and spin the wheel for yourself before picking this round","Gain Points","Max once per shop round, and twice per person"));
-    currentShop.push(new ShopEntry("Ban","1","Ban any unchosen Pokemon","Spend Points","Max once per shop round"));
+    currentShop.push(new ShopEntry("Ban","1","Spend 1 Point to Ban any unchosen Pokemon","Spend Points","Max once per shop round"));
     let chosenIndexes = [];
     let range = []
     for (let i = 0; i < shopEntries.length; i++) 
@@ -171,23 +172,24 @@ function initShopEntries()
     shopEntries.push(new ShopEntry("Aura Farming","","Gain half the point value of your first Pokemon but you can't use it or remove it from your draft until playoffs","Gain Points"));
     shopEntries.push(new ShopEntry("It Pays to be Bad","","Make an open offer to trade your entire draft up to this point with anyone else. If nobody takes it, you gain 5 points.","Gain Points"));
     //Spend Points
-    shopEntries.push(new ShopEntry("Awakened Potential","3","Add a third ability slot to one of your pokemon","Spend Points","Max once per player, always available, trading away the pokemon refunds the points"));
-    shopEntries.push(new ShopEntry("I Want That Too","+33%","Choose a pokemon that's already taken.","Spend Points","This is a duplicate, not a steal"));
+    shopEntries.push(new ShopEntry("Awakened Potential","3","Spend 3 points to add a third ability slot to one of your pokemon","Spend Points","Max once per player, always available, trading away the pokemon refunds the points"));
+    shopEntries.push(new ShopEntry("I Want That Too","+33%","Choose a pokemon that's already taken but pay 33% more.","Spend Points","This is a duplicate, not a steal"));
     //Bargains
-    shopEntries.push(new ShopEntry("Sale on Appliances","-2","Discount on Rotom Forms", "Bargain"));
-    shopEntries.push(new ShopEntry("Clearance","-18","Discount on Terapagos", "Bargain"));
-    shopEntries.push(new ShopEntry("White Knight","-50%","Your pick this round is discounted but can only be male and run Rivalry", "Bargain", "Limited to pokemon that can be male"));
-    shopEntries.push(new ShopEntry("Performance Contract","-50%","Your pick this round is discounted but if it ever goes a single week without getting a kill it is removed from your team and the points are not refunded.", "Bargain"));
+    shopEntries.push(new ShopEntry("Sale on Appliances","-2","-2 point discount on Rotom Forms", "Bargain"));
+    shopEntries.push(new ShopEntry("Clearance","-18","-18 point discount on Terapagos", "Bargain"));
+    shopEntries.push(new ShopEntry("White Knight","-50%","Your pick this round is half price but can only be male and run Rivalry", "Bargain", "Limited to pokemon that can be male"));
+    shopEntries.push(new ShopEntry("Performance Contract","-50%","Your pick this round is half price but if it ever goes a single week without getting a kill it is removed from your team and the points are not refunded.", "Bargain"));
     //Sacrifices
     shopEntries.push(new ShopEntry("Casino Field Trip","","Sacrifice and repick any pokemon you have drafted, there will be a wheel spin that affects all players at the beginning of the next round", "Sacrifice"));
     shopEntries.push(new ShopEntry("Take One for the Team","","Sacrifice your first pokemon and repick, then gain 5 points", "Sacrifice"));
+    shopEntries.push(new ShopEntry("Bloody Robbery","","Sacrifice pokemon from your team totalling at least 20 points and do not regain their point values, then steal a single pokemon from any other player", "Sacrifice","The other player will regain points and repick"));
     //Advantages
-    shopEntries.push(new ShopEntry("Risky Mitigation","5","Up to three times, at the start of a week, you may replace a single ability on your opponent's team with Illusion", "Advantage", "cannot be used in playoffs"));
-    shopEntries.push(new ShopEntry("Turn The Tables","8","One time, at the start of a week, you may swap teams with your opponent for that battle", "Advantage", "cannot be used in playoffs"));
-    shopEntries.push(new ShopEntry("The Gay Agenda","1","Up to three times, at the start of a week, you may force all your opponents pokemon to be the same gender", "Advantage", "You may choose which gender, cannot be used in playoffs"));
-    shopEntries.push(new ShopEntry("Clutch Factor","5","Up to two times, when about to enter a game 3, you may change the ability of a single pokemon on your team before finishing the set", "Advantage", "cannot be used in playoffs"));
+    shopEntries.push(new ShopEntry("Risky Mitigation","5","Spend 5 points, then up to three times, at the start of a week, you may replace a single ability on your opponent's team with Illusion", "Advantage"));
+    shopEntries.push(new ShopEntry("Turn The Tables","8","Spend 8 points, then one time, at the start of a week, you may swap teams with your opponent for that battle", "Advantage", "cannot be used in playoffs"));
+    shopEntries.push(new ShopEntry("The Gay Agenda","1","Spend 1 point, then up to three times, at the start of a week, you may force all your opponents pokemon to be the same gender", "Advantage", "You may choose which gender"));
+    shopEntries.push(new ShopEntry("Clutch Factor","5","Spend 5 points, then up to two times, when about to enter a game 3, you may change the ability of a single pokemon on your team before finishing the set", "Advantage"));
     //Banned Abilities
-    shopEntries.push(new ShopEntry("Reburden","-2","One of your pokemon may use unburden, but while it has unburden, the only item it can hold is air balloon", "Banned Abilities"));
-    shopEntries.push(new ShopEntry("Baby Bouncer","-3","Baby pokemon on your team are allowed to have magic bounce", "Banned Abilities"));
-    shopEntries.push(new ShopEntry("Baby Bruiser","-5","Pokemon with 40 or less base attack on your team are allowed to have huge power", "Banned Abilities"));
+    shopEntries.push(new ShopEntry("Reburden","-2","Spend 2 points to legalize Unburden for yourself, but while a pokemon has unburden, it can only hold air balloon", "Banned Abilities"));
+    shopEntries.push(new ShopEntry("Baby Bouncer","-3","Spend 3 points to legalize Magic Bounce for yourself, but it can only be used on baby pokemon", "Banned Abilities"));
+    shopEntries.push(new ShopEntry("Baby Bruiser","-5","Spend 5 points to legalize Huge Power for yourself but it can only be used on pokemon with 40 or less attack", "Banned Abilities"));
 }
