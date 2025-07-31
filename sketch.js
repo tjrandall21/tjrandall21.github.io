@@ -1,0 +1,193 @@
+
+let randomizeButtonSize;
+let randomizeButtonPosition;
+let randomizeButton;
+
+let shopPosition;
+let shopEntryHeight;
+let titleText;
+
+let shopEntries;
+let shopSize;
+let currentShop;
+class ShopEntry
+{
+    constructor(name,cost,effect,category,notes="")
+    {
+        this.name = name;
+        this.cost = cost;
+        this.effect = effect;
+        this.category = category;
+        this.notes = notes;
+    }
+    displayInShop(y)
+    {
+        if(y>=5)
+        {
+            y+=1;
+        }
+        textSize(20);
+        if(this.category == "Spend Points")
+        {
+            fill("orange");
+        }
+        else if(this.category == "Gain Points")
+        {
+            fill("green");
+        }
+        else if(this.category == "Bargain")
+        {
+            fill("yellow");
+        }
+        else if(this.category == "Sacrifice")
+        {
+            fill("red");
+        }
+        else if(this.category == "Banned Abilities")
+        {
+            fill("purple");
+        }
+        else if(this.category == "Advantage")
+        {
+            fill("blue");
+        }
+        text(this.name + ':',shopPosition.x,shopPosition.y+(y*shopEntryHeight))
+        var displayString = this.effect;
+        if (this.notes != "")
+        {
+            displayString += (" ("+this.notes+')');
+        }
+        //fill(230);
+        text(displayString, shopPosition.x+225,shopPosition.y+(y*shopEntryHeight));
+    }
+}
+
+function setup() 
+{
+    randomizeButtonSize = createVector(Math.min(250, 2*windowWidth/3),Math.min(75,windowHeight/6));
+    randomizeButtonPosition = createVector((windowWidth/2)-(randomizeButtonSize.x/2),windowHeight*3/4);
+    randomizeButton = createButton("Randomize");
+    randomizeButton.mouseClicked(randomizeAll);
+    randomizeButton.size(randomizeButtonSize.x,randomizeButtonSize.y);
+    randomizeButton.position(randomizeButtonPosition.x,randomizeButtonPosition.y);
+
+    shopPosition = createVector(25,150);
+    shopEntryHeight = 25;
+    titleText ="Super Secret Sploob Shop";
+    createCanvas(windowWidth, windowHeight);
+    shopSize = 6;
+    initShopEntries();
+    randomizeAll();
+}
+
+function draw() 
+{
+    background(35);
+    fill(255)
+    textSize(50)
+    text(titleText,(windowWidth/2)-300,75);
+
+    drawShop();
+}
+
+function windowResized() 
+{
+    resizeCanvas(windowWidth, windowHeight); // Resizes canvas to new window dimensions
+    randomizeButtonSize = createVector(Math.min(250, 2*windowWidth/3),Math.min(75,windowHeight/6));
+    randomizeButtonPosition = createVector((windowWidth/2)-(randomizeButtonSize.x/2),windowHeight*3/4);
+    randomizeButton.size(randomizeButtonSize.x,randomizeButtonSize.y);
+    randomizeButton.position(randomizeButtonPosition.x,randomizeButtonPosition.y);
+}
+
+function randomizeAll()
+{
+    currentShop = [];
+    currentShop.push(new ShopEntry("Flash Sale","-25%","Discount on "+getRandomTypeCombo()+" Pokemon", "Bargain", "Always available but the type combo changes"));
+    currentShop.push(new ShopEntry("Tradeless","","Gain 1 Point, but have 1 less maximum trades","Gain Points","Max 5 times per person"));
+    currentShop.push(new ShopEntry("One Trick Pony","","Gain 1 Point, and choose a pokemon on your draft to be limited to only one ability slot","Gain Points","Max 5 times per person, trading away the affected pokemon loses the additional point"));
+    currentShop.push(new ShopEntry("Gambling Sponsorship","","Gain 2 Points, and spin the wheel for yourself before picking this round","Gain Points","Max once per shop round, and twice per person"));
+    currentShop.push(new ShopEntry("Ban","1","Ban any unchosen Pokemon","Spend Points","Max once per shop round"));
+    let chosenIndexes = [];
+    let range = []
+    for (let i = 0; i < shopEntries.length; i++) 
+    {
+        range.push(i);
+    }
+    for (let i = 0; i < shopSize; i++) 
+    {
+        let newIndex = random(range);
+        while((chosenIndexes.includes(newIndex,0)))
+        {
+            newIndex = random(range);
+        }
+        chosenIndexes.push(newIndex);
+        const newEntry = shopEntries[newIndex];
+        currentShop.push(newEntry);
+    }
+}
+function randomizeType()
+{
+    currentShop[0] = new ShopEntry("Flash Sale","-25%","Discount on "+getRandomTypeCombo()+" Pokemon", "Bargain", "Always available but the type combo changes");
+}
+
+function drawShop()
+{
+    for (let i = 0; i < currentShop.length; i++) 
+    {
+        currentShop[i].displayInShop(i);
+    }
+}
+
+function drawLegend()
+{
+    var startHeight = 2*windowHeight/3
+    const buffer = 50;
+    fill("yellow");
+    text("Bargains",shopPosition.x,startHeight)
+}
+
+function getRandomTypeCombo(singleType = false)
+{
+    var types = ["Fire","Water","Grass","Electric","Normal","Flying","Ground","Bug","Rock","Fighting","Dark","Psychic","Ghost","Steel","Dragon","Fairy","Ice","Poison"];
+    var type1 = random(types);
+    if (singleType || random() < 0.25)
+    {
+        return type1;
+    }
+    let type2;
+    do 
+    {
+        type2 = random(types);
+    } while (type2 == type1);
+
+    return type1 + '/' + type2;
+}
+
+function initShopEntries()
+{
+    shopEntries = [];
+    //Gain Points
+    shopEntries.push(new ShopEntry("Random Battle","","Gain 5 points, and pick from a random battle this round","Gain Points","Trading this pokemon away will result in losing the 5 points gained from it")); 
+    shopEntries.push(new ShopEntry("Aura Farming","","Gain half the point value of your first Pokemon but you can't use it or remove it from your draft until playoffs","Gain Points"));
+    shopEntries.push(new ShopEntry("It Pays to be Bad","","Make an open offer to trade your entire draft up to this point with anyone else. If nobody takes it, you gain 5 points.","Gain Points"));
+    //Spend Points
+    shopEntries.push(new ShopEntry("Awakened Potential","3","Add a third ability slot to one of your pokemon","Spend Points","Max once per player, always available, trading away the pokemon refunds the points"));
+    shopEntries.push(new ShopEntry("I Want That Too","+33%","Choose a pokemon that's already taken.","Spend Points","This is a duplicate, not a steal"));
+    //Bargains
+    shopEntries.push(new ShopEntry("Sale on Appliances","-2","Discount on Rotom Forms", "Bargain"));
+    shopEntries.push(new ShopEntry("Clearance","-18","Discount on Terapagos", "Bargain"));
+    shopEntries.push(new ShopEntry("White Knight","-50%","Your pick this round is discounted but can only be male and run Rivalry", "Bargain", "Limited to pokemon that can be male"));
+    shopEntries.push(new ShopEntry("Performance Contract","-50%","Your pick this round is discounted but if it ever goes a single week without getting a kill it is removed from your team and the points are not refunded.", "Bargain"));
+    //Sacrifices
+    shopEntries.push(new ShopEntry("Casino Field Trip","","Sacrifice and repick any pokemon you have drafted, there will be a wheel spin that affects all players at the beginning of the next round", "Sacrifice"));
+    shopEntries.push(new ShopEntry("Take One for the Team","","Sacrifice your first pokemon and repick, then gain 5 points", "Sacrifice"));
+    //Advantages
+    shopEntries.push(new ShopEntry("Risky Mitigation","5","Up to three times, at the start of a week, you may replace a single ability on your opponent's team with Illusion", "Advantage", "cannot be used in playoffs"));
+    shopEntries.push(new ShopEntry("Turn The Tables","8","One time, at the start of a week, you may swap teams with your opponent for that battle", "Advantage", "cannot be used in playoffs"));
+    shopEntries.push(new ShopEntry("The Gay Agenda","1","Up to three times, at the start of a week, you may force all your opponents pokemon to be the same gender", "Advantage", "You may choose which gender, cannot be used in playoffs"));
+    shopEntries.push(new ShopEntry("Clutch Factor","5","Up to two times, when about to enter a game 3, you may change the ability of a single pokemon on your team before finishing the set", "Advantage", "cannot be used in playoffs"));
+    //Banned Abilities
+    shopEntries.push(new ShopEntry("Reburden","-2","One of your pokemon may use unburden, but while it has unburden, the only item it can hold is air balloon", "Banned Abilities"));
+    shopEntries.push(new ShopEntry("Baby Bouncer","-3","Baby pokemon on your team are allowed to have magic bounce", "Banned Abilities"));
+    shopEntries.push(new ShopEntry("Baby Bruiser","-5","Pokemon with 40 or less base attack on your team are allowed to have huge power", "Banned Abilities"));
+}
