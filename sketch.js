@@ -25,7 +25,7 @@ class ShopEntry
     }
     displayInShop(y)
     {
-        if(y>=5)
+        if(y>=7)
         {
             y+=0.5;
         }
@@ -116,11 +116,13 @@ function randomizeAll()
     if (input.value() == "")
     {
         currentShop = [];
+        currentShop.push(new ShopEntry("Reroll","2","Spend 2 Points to Reroll","Spend Points","Max 3 per round, always available"));
         currentShop.push(new ShopEntry("Flash Sale","-25%","-25% Discount on "+getRandomTypeCombo()+" Pokemon", "Bargain", "Always available but the type combo changes"));
         currentShop.push(new ShopEntry("Tradeless","","Gain 1 Point, but have 1 less maximum trades","Gain Points","Max 5 times per person, always available"));
         currentShop.push(new ShopEntry("One Trick Pony","","Gain 1 Point, and choose a pokemon on your draft to be limited to only one ability slot","Gain Points","Max 5 times per person, trading away the affected pokemon loses the additional point, always available"));
         currentShop.push(new ShopEntry("Gambling Sponsorship","","Gain 2 Points, and spin the wheel for yourself before picking this round","Gain Points","Max once per shop round, and twice per person, always available"));
-        currentShop.push(new ShopEntry("Ban","1","Spend 1 Point to Ban any unchosen Pokemon","Spend Points","Max once per shop round, always available"));
+        currentShop.push(new ShopEntry("Ban","2","Spend 2 Point to Ban any unchosen Pokemon","Spend Points","Max once per shop round, always available"));
+        currentShop.push(new ShopEntry("Paid DLC","1","Spend 2 Points to unlock a DLC ability","Spend Points","Always available. DLC abilities include Desolate Land, Primordial Sea, and Hadron Engine"));
         chosenIndexes = [];
         let range = []
         for (let i = 0; i < shopEntries.length; i++) 
@@ -141,11 +143,11 @@ function randomizeAll()
     }
     else if(input.value() == "type" || input.value() == "Type")
     {
-        currentShop[0] = new ShopEntry("Flash Sale","-25%","-25% Discount on "+getRandomTypeCombo()+" Pokemon", "Bargain", "Always available but the type combo changes");
+        currentShop[1] = new ShopEntry("Flash Sale","-25%","-25% Discount on "+getRandomTypeCombo()+" Pokemon", "Bargain", "Always available but the type combo changes");
     }
     else if(chosenIndexes.length != shopEntries.length &&(input.value() == '1' ||input.value() == '2' ||input.value() == '3' ||input.value() == '4' ||input.value() == '5' ||input.value() == '6'))
     {
-        var index = parseInt(input.value())+4;
+        var index = parseInt(input.value())+6;
         let range = []
         for (let i = 0; i < shopEntries.length; i++) 
         {
@@ -257,12 +259,16 @@ function initShopEntries()
     shopEntries.push(new ShopEntry("Clearance","-18","-18 point discount on Terapagos", "Bargain"));
     shopEntries.push(new ShopEntry("White Knight","-50%","Your pick this round is half price but can only be male and run Rivalry", "Bargain", "Limited to pokemon that can be male"));
     shopEntries.push(new ShopEntry("Performance Contract","-50%","Your pick this round is half price but if it ever goes a single week without getting a kill it is removed from your team and the points are not refunded.", "Bargain"));
-    //Sacrifices
-    shopEntries.push(new ShopEntry("Casino Field Trip","","Sacrifice and repick any pokemon you have drafted, there will be a wheel spin that affects all players at the beginning of the next round", "Sacrifice"));
-    shopEntries.push(new ShopEntry("Take One for the Team","","Sacrifice your first pokemon and repick, then gain 5 points", "Sacrifice"));
-    shopEntries.push(new ShopEntry("I'd Kill for a Pony For Christmas","","Sacrifice a Rock type, a Steel type, and a Grass type totalling at least 25 points and do not regain their point values, then receive Keldeo", "Sacrifice"));
-    shopEntries.push(new ShopEntry("Bloody Robbery","","Sacrifice pokemon from your team totalling at least 20 points and do not regain their point values, then steal a single pokemon from any other player", "Sacrifice","Repick until you have as many pokemon as you started with, the other player will regain points and repick"));
+    shopEntries.push(new ShopEntry("Turtle Power","-50%","Your pick this round is half price but Franklin chooses it for you.", "Bargain"));
     
+    //Sacrifices
+    shopEntries.push(new ShopEntry("Casino Field Trip","","Sacrifice and repick any pokemon you have drafted, there will be a wheel spin for all players at the beginning of the next round", "Sacrifice"));
+    shopEntries.push(new ShopEntry("Take One for the Team","","Sacrifice your first pokemon and repick, then gain 5 points", "Sacrifice"));
+    shopEntries.push(new ShopEntry("I'd Kill for a Pony For Christmas","","Sacrifice a Rock type, a Steel type, and a Grass type totalling at least 25 points and do not regain their point values, then receive Keldeo", "Sacrifice","Repick until you have as many pokemon as you started with."));
+    shopEntries.push(new ShopEntry("Polymerization","","Sacrifice Pokemon of matching types totalling at least 21 points and do not regain their point values, then receive any pokemon that is legal in smogon AAA", "Sacrifice","Includes pokemon that are banned in this draft. Repick until you have as many pokemon as you started with"));
+    shopEntries.push(new ShopEntry("Bloody Robbery","","Sacrifice Pokemon from your team totalling at least 20 points and do not regain their point values, then steal a single pokemon from any other player", "Sacrifice","Repick until you have as many pokemon as you started with, the other player will regain points and repick"));
+    
+
     //Advantages
     shopEntries.push(new ShopEntry("Risky Mitigation","5","Spend 5 points, then up to three times, at the start of a week, you may replace a single ability on your opponent's team with Illusion", "Advantage"));
     shopEntries.push(new ShopEntry("Turn The Tables","8","Spend 8 points, then one time, at the start of a week, you may swap teams with your opponent for that battle", "Advantage", "cannot be used in playoffs"));
@@ -270,7 +276,6 @@ function initShopEntries()
     shopEntries.push(new ShopEntry("Clutch Factor","5","Spend 5 points, then up to two times, when about to enter a game 3, you may change the ability of a single pokemon on your team before finishing the set", "Advantage"));
     
     //Banned Abilities
-    shopEntries.push(new ShopEntry("Reburden","-2","Spend 2 points to legalize Unburden for yourself, but Pokemon with it can only hold air balloon", "Banned Abilities"));
     shopEntries.push(new ShopEntry("Baby Bouncer","-3","Spend 3 points to legalize Magic Bounce for yourself, but it can only be used on baby pokemon", "Banned Abilities"));
     shopEntries.push(new ShopEntry("Baby Bruiser","-5","Spend 5 points to legalize Huge Power for yourself but it can only be used on pokemon with 40 or less base attack", "Banned Abilities"));
     shopEntries.push(new ShopEntry("Sleeper Pick","-2","Spend 2 points to legalize Comatose for yourself but Pokemon with it cannot use phase moves", "Banned Abilities","a phase move is any move that forces the opponent to switch out"));
